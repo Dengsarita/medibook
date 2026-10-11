@@ -1,0 +1,18 @@
+services:
+  doctor-1:
+    build: ../../doctor-service
+    environment:
+      PORT: 4003
+      MONGO_URI: ${MONGO_URI}
+    ports:
+      - "4003:4003"
+    restart: unless-stopped
+
+  doctor-2:
+    build: ../../doctor-service
+    environment:
+      PORT: 4003
+      MONGO_URI: ${MONGO_URI}
+    ports:
+      - "4013:4003"
+    restart: unless-stopped

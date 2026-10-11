@@ -1,0 +1,55 @@
+services:
+  registration:
+    build: ../../registration-service
+    env_file: ../../registration-service/.env
+    restart: unless-stopped
+
+  login:
+    build: ../../login-service
+    env_file: ../../login-service/.env
+    restart: unless-stopped
+
+  doctor-1:
+    build: ../../doctor-service
+    env_file: ../../doctor-service/.env
+    restart: unless-stopped
+
+  doctor-2:
+    build: ../../doctor-service
+    env_file: ../../doctor-service/.env
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ../../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - doctor-1
+      - doctor-2
+    restart: unless-stopped
+
+  appointment:
+    build: ../../appointment-service
+    env_file: ../../appointment-service/.env
+    environment:
+      DOCTOR_URL: http://nginx:8080
+    depends_on:
+      - nginx
+    restart: unless-stopped
+
+  api-gateway:
+    build: ../../api-gateway
+    env_file: ../../api-gateway/.env
+    environment:
+      REGISTRATION_URL: http://registration:4001
+      LOGIN_URL: http://login:4002
+      DOCTOR_URL: http://nginx:8080
+      APPOINTMENT_URL: http://appointment:4004
+    ports:
+      - "3000:3000"
+    depends_on:
+      - registration
+      - login
+      - nginx
+      - appointment
+    restart: unless-stopped

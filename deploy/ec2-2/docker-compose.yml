@@ -1,0 +1,20 @@
+services:
+  registration:
+    build: ../../registration-service
+    environment:
+      PORT: 4001
+      MONGO_URI: ${MONGO_URI}
+    ports:
+      - "4001:4001"
+    restart: unless-stopped
+
+  login:
+    build: ../../login-service
+    environment:
+      PORT: 4002
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES: 1h
+    ports:
+      - "4002:4002"
+    restart: unless-stopped

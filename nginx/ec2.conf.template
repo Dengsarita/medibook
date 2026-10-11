@@ -1,0 +1,14 @@
+upstream doctor_service {
+  server ${EC2_3_IP}:4003;
+  server ${EC2_3_IP}:4013;
+}
+
+server {
+  listen 8080;
+
+  location / {
+    proxy_pass http://doctor_service;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+}

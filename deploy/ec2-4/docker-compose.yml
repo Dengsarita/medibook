@@ -1,0 +1,10 @@
+services:
+  appointment:
+    build: ../../appointment-service
+    environment:
+      PORT: 4004
+      MONGO_URI: ${MONGO_URI}
+      DOCTOR_URL: http://${EC2_1_IP}:8080
+    ports:
+      - "4004:4004"
+    restart: unless-stopped
